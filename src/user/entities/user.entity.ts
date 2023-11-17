@@ -2,9 +2,9 @@ import { Entity, Column } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import Model from 'src/entities/model.entity';
 
-@Entity()
+@Entity('users')
 export class User extends Model {
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Column()
