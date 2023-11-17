@@ -6,7 +6,10 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get(':username')
-  findOne(@Param('username') username: string) {
-    return this.userService.findByUsername(username);
+  async findOne(@Param('username') username: string) {
+    const user = await this.userService.findByUsername(username);
+    delete user.password;
+
+    return user;
   }
 }
