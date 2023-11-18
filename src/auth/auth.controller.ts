@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -10,6 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import SignUpDto from './dto/sign-up.dto';
 import { LocalAuthGuard } from './guard/local-auth.guard';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -25,5 +27,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async signIn(@Request() req: any) {
     return this.authService.signIn(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req: any) {
+    return req.user;
   }
 }
