@@ -5,14 +5,17 @@ import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/user/user.service';
 import SignInDto from './dto/sign-in.dto';
 import SignUpDto from './dto/sign-up.dto';
+import { RefreshTokenStorage } from './refresh-token-storage.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
+    private readonly refreshTokenStorage: RefreshTokenStorage,
     private readonly configSercive: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
+
   async signIn(signInDto: SignInDto) {
     const { id, username } = signInDto;
 
@@ -52,5 +55,21 @@ export class AuthService {
       return result;
     }
     return null;
+  }
+
+  async refreshAccessToken(
+    refreshToken: string,
+  ): Promise<{ access_token: string }> {
+    const decoded = await this.jwtService.verifyAsync(refreshToken);
+    await this.refreshTokenStorage.validate(decoded.sub, refreshToken);
+    const payload = { sub: decoded.sub, username: decoded.username };
+    const accessToken = await this.jwtService.signAsync(payload);
+
+    return { access_token: accessToken };
+  }
+
+  async invalidateToken(accessToken: string): Promise<void> {
+    const decoded = await this.jwtService.verifyAsync(accessToken);
+    await this.refreshTokenStorage.invalidate(decoded.sub);
   }
 }
