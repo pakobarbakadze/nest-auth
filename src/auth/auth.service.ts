@@ -14,21 +14,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
   async signIn(signInDto: SignInDto) {
-    const { username, password } = signInDto;
+    const { id, username } = signInDto;
 
-    const user = await this.userService.findByUsername(username);
-
-    if (!user) {
-      throw new UnauthorizedException('Invalid username or password');
-    }
-
-    const passwordIsValid = await user.validatePassword(password);
-
-    if (!passwordIsValid) {
-      throw new UnauthorizedException('Invalid username or password');
-    }
-
-    const payload = { sub: user.id, username: user.username };
+    const payload = { sub: id, username: username };
 
     const accessToken = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
@@ -49,9 +37,20 @@ export class AuthService {
       username,
       hashedPassword,
     });
-
     delete createdUser.password;
 
     return createdUser;
+  }
+
+  async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.userService.findByUsername(username);
+
+    if (!user) throw new UnauthorizedException('Invalid username or password');
+
+    if (await user.validatePassword(password)) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
   }
 }
