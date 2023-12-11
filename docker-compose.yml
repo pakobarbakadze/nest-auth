@@ -39,7 +39,7 @@ services:
   redisinsight:
     image: redislabs/redisinsight
     ports:
-      - "8001:8001"    
+      - 8001:8001
 
 volumes:
   pgdata:
