@@ -14,7 +14,8 @@ services:
       - db
       - cache
     volumes:
-      - ./src:/app/src
+      - /app/node_modules
+      - .:/app
 
   db:
     image: postgres

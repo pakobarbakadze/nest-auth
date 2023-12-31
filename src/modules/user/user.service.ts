@@ -20,7 +20,7 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  findOne(id: number): Promise<User> {
+  findOne(id: string): Promise<User> {
     return this.userRepository.findOne({ where: { id } });
   }
 
