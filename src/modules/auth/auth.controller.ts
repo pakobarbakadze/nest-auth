@@ -14,7 +14,6 @@ import SignUpDto from './dto/sign-up.dto';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { JwtRefreshTokenGuard } from './guard/jwt-refresh.guard';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -40,8 +39,8 @@ export class AuthController {
 
   @UseGuards(JwtRefreshTokenGuard)
   @Post('refresh-token')
-  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.refreshAccessToken(refreshTokenDto.refresh_token);
+  async refreshToken(@Headers('authorization') authorization: string) {
+    return this.authService.refreshAccessToken(authorization);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -60,8 +60,9 @@ export class AuthService {
   }
 
   async refreshAccessToken(
-    refreshToken: string,
+    authorization: string,
   ): Promise<{ access_token: string }> {
+    const refreshToken = authorization.split(' ')[1];
     const decoded = await this.jwtService.verifyAsync(refreshToken, {
       secret: this.configSercive.get<string>('REFRESH_JWT_SECRET'),
     });
