@@ -4,18 +4,21 @@ services:
   app:
     build:
       context: .
+      target: NODE_ENV
       dockerfile: Dockerfile
     container_name: nest-docker-postgres
     env_file:
       - .env
     ports:
       - ${PORT}:${PORT}
+      - ${DEBUGGER_PORT}:${DEBUGGER_PORT}
     depends_on:
       - db
       - cache
     volumes:
       - /app/node_modules
       - .:/app
+    command: npm run start:debug:container
 
   db:
     image: postgres
@@ -35,12 +38,12 @@ services:
     env_file:
       - .env
     ports:
-      - 6379:6379
+      - ${REDIS_PORT}:${REDIS_PORT}
 
   redisinsight:
     image: redislabs/redisinsight
     ports:
-      - 8001:8001
+      - ${REDIS_INSIGHT_PORT}:${REDIS_INSIGHT_PORT}
 
 volumes:
   pgdata:
