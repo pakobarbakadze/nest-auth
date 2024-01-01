@@ -47,8 +47,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('invalidate-token')
   async invalidateToken(@Headers('authorization') authorization: string) {
-    const token = authorization.split(' ')[1];
-    await this.authService.invalidateToken(token);
-    return { message: 'Token invalidated successfully' };
+    return this.authService.invalidateToken(authorization);
   }
 }

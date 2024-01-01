@@ -45,7 +45,7 @@ export class AuthService {
     return createdUser;
   }
 
-  async validateUser(username: string, password: string): Promise<any> {
+  async validateUser(username: string, password: string) {
     const user = await this.userService.findByUsername(username);
 
     if (!user) throw new UnauthorizedException('Invalid username or password');
@@ -68,8 +68,11 @@ export class AuthService {
     return { access_token: accessToken };
   }
 
-  async invalidateToken(accessToken: string): Promise<void> {
+  async invalidateToken(authorization: string) {
+    const accessToken = authorization.split(' ')[1];
     const decoded = await this.jwtService.verifyAsync(accessToken);
     await this.refreshTokenStorage.invalidate(decoded.sub);
+
+    return { message: 'Token invalidated successfully' };
   }
 }
