@@ -27,6 +27,8 @@ export class AuthService {
       expiresIn: '1w',
     });
 
+    await this.refreshTokenStorage.insert(id, refreshToken);
+
     return { access_token: accessToken, refresh_token: refreshToken };
   }
 
@@ -60,7 +62,9 @@ export class AuthService {
   async refreshAccessToken(
     refreshToken: string,
   ): Promise<{ access_token: string }> {
-    const decoded = await this.jwtService.verifyAsync(refreshToken);
+    const decoded = await this.jwtService.verifyAsync(refreshToken, {
+      secret: this.configSercive.get<string>('REFRESH_JWT_SECRET'),
+    });
     await this.refreshTokenStorage.validate(decoded.sub, refreshToken);
     const payload = { sub: decoded.sub, username: decoded.username };
     const accessToken = await this.jwtService.signAsync(payload);
@@ -69,8 +73,8 @@ export class AuthService {
   }
 
   async invalidateToken(authorization: string) {
-    const accessToken = authorization.split(' ')[1];
-    const decoded = await this.jwtService.verifyAsync(accessToken);
+    const token = authorization.split(' ')[1];
+    const decoded = await this.jwtService.verifyAsync(token);
     await this.refreshTokenStorage.invalidate(decoded.sub);
 
     return { message: 'Token invalidated successfully' };

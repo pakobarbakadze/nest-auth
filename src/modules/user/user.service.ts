@@ -21,16 +21,10 @@ export class UserService {
   }
 
   async findById(id: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { id } });
-    delete user.password;
-
-    return user;
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   async findByUsername(username: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { username } });
-    delete user.password;
-
-    return user;
+    return await this.userRepository.findOne({ where: { username } });
   }
 }

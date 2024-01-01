@@ -7,6 +7,7 @@ import { UserModule } from '../user/user.module';
 import { LocalStrategy } from './strategy/local.strategy';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { RefreshTokenStorage } from './refresh-token-storage.service';
+import { JwtRefreshTokenStrategy } from './strategy/jwt-refresh.strategy';
 
 @Module({
   imports: [
@@ -17,7 +18,13 @@ import { RefreshTokenStorage } from './refresh-token-storage.service';
       signOptions: { expiresIn: '15m' },
     }),
   ],
-  providers: [AuthService, RefreshTokenStorage, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    RefreshTokenStorage,
+    LocalStrategy,
+    JwtStrategy,
+    JwtRefreshTokenStrategy,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}
