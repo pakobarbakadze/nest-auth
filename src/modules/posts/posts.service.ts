@@ -23,19 +23,19 @@ export class PostsService {
     return this.postRepository.save(post);
   }
 
-  async findAll() {
-    return await this.postRepository.find();
+  findAll() {
+    return this.postRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  findOne(id: string) {
+    return this.postRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
+  update(id: string, updatePostDto: UpdatePostDto) {
     return `This action updates a #${id} post`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  remove(id: string) {
+    return this.postRepository.delete(id);
   }
 }
