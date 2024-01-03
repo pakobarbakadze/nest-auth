@@ -35,8 +35,6 @@ services:
 
   cache:
     image: redis:6
-    env_file:
-      - .env
     ports:
       - ${REDIS_PORT}:${REDIS_PORT}
 

@@ -9,7 +9,7 @@ export class LocalStrategy extends PassportStrategy(
   Strategy,
   AuthStrategy.LOCAL,
 ) {
-  constructor(private authService: AuthService) {
+  constructor(private readonly authService: AuthService) {
     super();
   }
 

@@ -15,6 +15,8 @@ import { LocalAuthGuard } from './guard/local-auth.guard';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { JwtRefreshTokenGuard } from './guard/jwt-refresh.guard';
 
+//TODO : strategy returns user object which contains password field
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
