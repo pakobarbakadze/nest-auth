@@ -15,21 +15,19 @@ import { LocalAuthGuard } from './guard/local-auth.guard';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { JwtRefreshTokenGuard } from './guard/jwt-refresh.guard';
 
-//TODO : strategy returns user object which contains password field
-
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('sign-up')
-  async signUp(@Body() signUpDto: SignUpDto) {
+  signUp(@Body() signUpDto: SignUpDto) {
     return this.authService.signUp(signUpDto);
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
-  async signIn(@Request() req: any) {
+  signIn(@Request() req: any) {
     return this.authService.signIn(req.user);
   }
 
@@ -41,13 +39,13 @@ export class AuthController {
 
   @UseGuards(JwtRefreshTokenGuard)
   @Post('refresh-token')
-  async refreshToken(@Headers('authorization') authorization: string) {
+  refreshToken(@Headers('authorization') authorization: string) {
     return this.authService.refreshAccessToken(authorization);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('invalidate-token')
-  async invalidateToken(@Headers('authorization') authorization: string) {
+  invalidateToken(@Headers('authorization') authorization: string) {
     return this.authService.invalidateToken(authorization);
   }
 }
